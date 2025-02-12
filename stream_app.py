@@ -13,13 +13,12 @@ with open(model_path, 'rb') as file:
 # 侧边栏输入
 with st.sidebar:
     st.header("患者参数输入")
+    st.subheader("基础特征")
+    age = st.slider("年龄 (years old)", min_value=18, max_value=50, value=30)
     st.subheader("卵巢储备指标")
     amh = st.slider("AMH (ng/mL)", min_value=0.0, max_value=10.0, value=3.0, step=0.1)
     afc = st.slider("AFC (个)", min_value=0, max_value=40, value=15, step=1)
     fsh = st.slider("基础FSH (IU/L)", min_value=1.0, max_value=20.0, value=8.0, step=0.1)
-
-    st.subheader("基础特征")
-    age = st.slider("年龄 (years old)", min_value=18, max_value=50, value=30)
 
 # 检查输入值是否为有效的数字（即确保没有 NaN）
 if amh is None or afc is None or fsh is None or age is None:
@@ -27,10 +26,10 @@ if amh is None or afc is None or fsh is None or age is None:
 else:
     # 创建输入数据框
     input_data = pd.DataFrame({
+        'age': [age],
         'AMH': [amh],
         'AFC': [afc],
         'FSH': [fsh],
-        'age': [age],
     })
 
     # 预测与解释
