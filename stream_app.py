@@ -4,7 +4,8 @@ import pickle
 import shap
 
 # 获取当前文件的目录
-model_path = "C:\\Users\\kunduz\\xgboost_model.pkl"
+current_dir = os.path.dirname(os.path.abspath(__file__))
+model_path = os.path.join(current_dir, 'xgboost_model.pkl')
 with open(model_path, 'rb') as file:
     model = pickle.load(file)
 
