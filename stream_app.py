@@ -3,6 +3,7 @@ import pandas as pd
 import pickle
 import shap
 import os
+import matplotlib.pyplot as plt
 
 # 获取当前文件的目录
 current_dir = os.path.dirname(os.path.abspath(__file__))
@@ -55,31 +56,30 @@ else:
             - {"建议冷冻全胚" if risk_level == "高风险" else "可考虑鲜胚移植"}
             """)
 
-    with col2:
-        if 'prob' in locals():
-            st.subheader("风险因素解析")
-
-            # SHAP解释
+with col2:
+    if 'prob' in locals():
+        st.subheader("风险因素解析")
+        
+        # SHAP解释
+        try:
             explainer = shap.TreeExplainer(model)
             shap_values = explainer.shap_values(input_data)
-
+            
             # 可视化设置
             st.set_option('deprecation.showPyplotGlobalUse', False)  # 隐藏警告
-            shap.summary_plot(shap_values, input_data, plot_type="bar", show=False)
-            st.pyplot()
-
+            
+            # 绘制 SHAP 瀑布图
+            fig, ax = plt.subplots()
+            shap.plots.waterfall(shap_values[0], max_display=10, show=False)
+            st.pyplot(fig)
+            
             # 特征解释文本
             st.markdown("""
             **特征说明**:
             - 正值增加风险，负值降低风险
             - AMH/AFC是主要预测因子，BMI呈U型影响
             """)
+        except Exception as e:
+            st.error(f"SHAP 解释或可视化时出错：{e}")
+            """)
 
-# 注意事项
-st.markdown("---")
-st.warning("""
-**使用限制**:
-1. 适用于未接受过卵巢手术的患者
-2. 多囊卵巢患者需结合超声评估
-3. 最终决策需结合临床判断
-""")
