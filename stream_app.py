@@ -2,6 +2,7 @@ import streamlit as st
 import pandas as pd
 import pickle
 import shap
+import os
 
 # 获取当前文件的目录
 current_dir = os.path.dirname(os.path.abspath(__file__))
